@@ -9,15 +9,15 @@ services:
     volumes:
       - ./config:/config
     ports:
-      - 80:80
+      - 8081:80
       - 443:443
     restart: unless-stopped
-  
   apache:
+  
     image: httpd:2.4-alpine
     container_name: apache
     ports:
-      - 8081:80
+      - 80:80
     volumes:
       - ./public:/usr/local/apache2/htdocs:ro
     restart: unless-stopped
@@ -26,3 +26,22 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+
+
+  code:
+    image: lscr.io/linuxserver/code-server:latest
+    restart: always
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+      PASSWORD: examplepass
+    volumes:
+      - ./:/config/workspace
+      - code_config:/config
+    ports:
+      - "8443:8443"
+
+
+volumes:
+  code_config:
